@@ -16,7 +16,7 @@ const krAliases = hasKrObservable ? {
 } : {}
 
 export default defineConfig({
-  base: '/frameworks/keyed/vuact-hooks/dist/',
+  base: '/frameworks/keyed/vuact-zustand/dist/',
   plugins: [vue()],
   resolve: {
     alias: {
