@@ -1,40 +1,40 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import { fileURLToPath } from 'node:url'
-import { dirname, resolve } from 'node:path'
-import { readFileSync } from 'node:fs'
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
+import { fileURLToPath } from "node:url";
+import { dirname, resolve } from "node:path";
+import { readFileSync } from "node:fs";
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
-const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8'))
-const extraDeps = Object.keys(pkg.dependencies || {}).filter((name) => !['vuact', 'vuact-dom', 'vue', 'react', 'react-dom'].includes(name))
-const hasKrObservable = extraDeps.includes('kr-observable')
-const depAliases = Object.fromEntries(extraDeps.filter((name) => name !== 'kr-observable').map((name) => [name, resolve(__dirname, 'node_modules/' + name)]))
-const krAliases = hasKrObservable ? {
-  'kr-observable/react': resolve(__dirname, 'node_modules/kr-observable/dist/esm/react/index.js'),
-  'kr-observable': resolve(__dirname, 'node_modules/kr-observable/dist/esm/index.js'),
-} : {}
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const pkg = JSON.parse(readFileSync(new URL("./package.json", import.meta.url), "utf8"));
+const extraDeps = Object.keys(pkg.dependencies || {}).filter(
+  (name) => !["vuact", "vuact-dom", "vue", "react", "react-dom"].includes(name)
+);
+const depAliases = Object.fromEntries(extraDeps.map((name) => [name, resolve(__dirname, "node_modules/" + name)]));
 
 export default defineConfig({
-  base: '/frameworks/keyed/vuact-mobX/dist/',
+  base: "/frameworks/keyed/vuact-mobX/dist/",
   plugins: [vue()],
   resolve: {
     alias: {
-      'react/jsx-runtime': resolve(__dirname, 'node_modules/vuact/jsx-runtime'),
-      'react/jsx-dev-runtime': resolve(__dirname, 'node_modules/vuact/jsx-dev-runtime'),
-      react: resolve(__dirname, 'node_modules/vuact'),
-      'react-dom/client': resolve(__dirname, 'node_modules/vuact-dom/client'),
-      'react-dom/server': resolve(__dirname, 'node_modules/vuact-dom/server'),
-      'react-dom': resolve(__dirname, 'node_modules/vuact-dom'),
+      "react/jsx-runtime": resolve(__dirname, "node_modules/vuact/jsx-runtime"),
+      "react/jsx-dev-runtime": resolve(__dirname, "node_modules/vuact/jsx-dev-runtime"),
+      react: resolve(__dirname, "node_modules/vuact"),
+      "react-dom/client": resolve(__dirname, "node_modules/vuact-dom/client"),
+      "react-dom/server": resolve(__dirname, "node_modules/vuact-dom/server"),
+      "react-dom": resolve(__dirname, "node_modules/vuact-dom"),
       ...depAliases,
-      ...krAliases,
     },
   },
   optimizeDeps: {
-    exclude: ['react', 'react-dom'],
+    exclude: ["react", "react-dom"],
   },
   esbuild: {
-    jsx: 'automatic',
-    jsxImportSource: 'react',
+    jsx: "automatic",
+    jsxImportSource: "react",
   },
-})
+  build: {
+    target: "esnext",
+    minify: false,
+  },
+});

@@ -8,13 +8,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8'))
 const extraDeps = Object.keys(pkg.dependencies || {}).filter((name) => !['vuact', 'vuact-dom', 'vue', 'react', 'react-dom'].includes(name))
-const hasKrObservable = extraDeps.includes('kr-observable')
-const depAliases = Object.fromEntries(extraDeps.filter((name) => name !== 'kr-observable').map((name) => [name, resolve(__dirname, 'node_modules/' + name)]))
-const krAliases = hasKrObservable ? {
-  'kr-observable/react': resolve(__dirname, 'node_modules/kr-observable/dist/esm/react/index.js'),
-  'kr-observable': resolve(__dirname, 'node_modules/kr-observable/dist/esm/index.js'),
-} : {}
-
+const depAliases = Object.fromEntries(extraDeps.map((name) => [name, resolve(__dirname, 'node_modules/' + name)]))
 export default defineConfig({
   base: '/frameworks/keyed/vuact-hooks/dist/',
   plugins: [vue()],
@@ -27,7 +21,6 @@ export default defineConfig({
       'react-dom/server': resolve(__dirname, 'node_modules/vuact-dom/server'),
       'react-dom': resolve(__dirname, 'node_modules/vuact-dom'),
       ...depAliases,
-      ...krAliases,
     },
   },
   optimizeDeps: {
