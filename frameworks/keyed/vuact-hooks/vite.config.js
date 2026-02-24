@@ -1,0 +1,29 @@
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import { fileURLToPath } from 'node:url'
+import { dirname, resolve } from 'node:path'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
+
+export default defineConfig({
+  base: '/frameworks/keyed/vuact-hooks/dist/',
+  plugins: [vue()],
+  resolve: {
+    alias: {
+      'react/jsx-runtime': resolve(__dirname, 'node_modules/vuact/jsx-runtime'),
+      'react/jsx-dev-runtime': resolve(__dirname, 'node_modules/vuact/jsx-dev-runtime'),
+      react: resolve(__dirname, 'node_modules/vuact'),
+      'react-dom/client': resolve(__dirname, 'node_modules/vuact-dom/client'),
+      'react-dom/server': resolve(__dirname, 'node_modules/vuact-dom/server'),
+      'react-dom': resolve(__dirname, 'node_modules/vuact-dom'),
+    },
+  },
+  optimizeDeps: {
+    exclude: ['react', 'react-dom'],
+  },
+  esbuild: {
+    jsx: 'automatic',
+    jsxImportSource: 'react',
+  },
+})
